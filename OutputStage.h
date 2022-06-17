@@ -73,8 +73,8 @@ struct Output_Data
 
     Matrix<double, 12, 1> a {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    Matrix<double, 12, 1> b {0, 0, 0, 0, 0, 0, 0, -3.5280e+09, 0, 0, 0, 0};
-
+    //Matrix<double, 12, 1> b {0, 0, 0, 0, 0, 0, 0, -3.5280e+09, 0, 0, 0, 0};
+    Matrix<double, 12, 1> b {0, 0, 0, 0, 0, 0, 0,  -126.2125, 0, 0, 0, 0};
     Matrix<double, 3, 1> adapt_par1;
     Matrix<double, 3, 1> adapt_ser1;
     Matrix<double, 3, 1> adapt_ser2;
@@ -87,5 +87,5 @@ struct Output_Data
 };
 
 typedef Matrix<float,5,5> MyMat_OUT;
-MyMat_OUT PrepareOutputStage(double sampleRate);
 float OutputStageSample(const float inputSample, Output_Data& O_d);
+void UpdateKnob_OutputStage(Output_Data& O_d, float out_knob);

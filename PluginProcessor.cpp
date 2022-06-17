@@ -22,6 +22,27 @@ WDFsPluginAudioProcessor::WDFsPluginAudioProcessor()
                        )
 #endif
 {
+
+
+    //STATE INITIALIZATION
+    state = new juce::AudioProcessorValueTreeState(*this, nullptr);
+
+
+
+
+    state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.0f, 1.0f, 0.5f), 0.5f, nullptr, nullptr);
+    state->createAndAddParameter("treble", "Treble", "Treble", juce::NormalisableRange<float>(0.25f, 0.75f, 0.25f), 0.5f, nullptr, nullptr);
+    state->createAndAddParameter("out", "Out", "Out", juce::NormalisableRange<float>(0.25f, 0.75f, 0.25f), 0.5f, nullptr, nullptr);
+
+
+
+    state->state = juce::ValueTree("gain");
+    state->state = juce::ValueTree("treble");
+    state->state = juce::ValueTree("out");
+
+    current_gain_value = *state->getRawParameterValue("gain");
+    current_treble_value = *state->getRawParameterValue("treble");
+    current_out_value = *state->getRawParameterValue("out");
 }
 
 WDFsPluginAudioProcessor::~WDFsPluginAudioProcessor()
@@ -127,7 +148,10 @@ void WDFsPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     S_in = PrepareInputStage(sample_rate);
     S_g = PrepareGainStage(sample_rate);
     S_ss = PrepareSummingStage(sample_rate);
-    S_tc = PrepareToneCTLStage(sample_rate);
+    //S_tc = PrepareToneCTLStage(sample_rate);
+    //current_treble_value = *state->getRawParameterValue("treble");     //some bug shit happens and change the pot to 0.25
+    S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(current_treble_value);
+    //output stage is in BCT form-> no S needed!
 
 }
 
@@ -176,9 +200,40 @@ bool WDFsPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 
 void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    
+    //PARAMETERS RETRIVAL
+
+    float gain_knob_value = *state->getRawParameterValue("gain");
+    //std::cout << "gain knob: " << gain_knob_value << std::endl;
+    if(gain_knob_value!=current_gain_value)
+    {
+        current_gain_value = gain_knob_value;
+        S_g = PrepareGainStage_Knob(gain_knob_value, G_data);
+        std::cout << "gain knob: " << gain_knob_value << std::endl;
+        std::cout << "S_g matrix: \n\n" << S_g << std::endl;
+    }
+
+    float treble_knob_value = *state->getRawParameterValue("treble");
+    if(treble_knob_value!=current_treble_value)
+    {
+        current_treble_value = treble_knob_value;
+        //S_tc = PrepareToneCTLStage_Knob(TC_data, treble_knob_value);
+        S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(treble_knob_value);
+        std::cout << "treble knob: " << treble_knob_value << std::endl;
+        std::cout << "S_tc 9x9 \n\n"<< S_tc_9x9 << std::endl;
+    }
+
+    float out_knob_value = *state->getRawParameterValue("out");
+    if(out_knob_value!=current_out_value)
+    {
+        current_out_value = out_knob_value;
+        UpdateKnob_OutputStage(O_data, out_knob_value);
+    }
+
+
     //FORCED MONO INPUT (Guitar pedal :D)
     juce::ignoreUnused(midiMessages);
-    //juce::ScopedNoDenormals noDenormals;
+    juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = 1; //getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
@@ -227,7 +282,8 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
            input_out = InputStageSample(input_sample, S_in, I_data);
            gain_out = GainStageSample(input_out, S_g, G_data);
            sum_out = SummingStageSample(gain_out, S_ss, S_data);
-           tone_out = ToneCTLStageSample(sum_out, S_tc, TC_data);
+           //tone_out = ToneCTLStageSample(sum_out, S_tc, TC_data);
+           tone_out = ToneCTLStageSample_9x9(sum_out, S_tc_9x9, TC_data_9x9);
            channelData[sample] = OutputStageSample(tone_out, O_data);
            channelData1[sample] = channelData[sample];
        }
@@ -263,17 +319,34 @@ juce::AudioProcessorEditor* WDFsPluginAudioProcessor::createEditor()
 }
 
 //==============================================================================
+
+
+juce::AudioProcessorValueTreeState& WDFsPluginAudioProcessor::getState() {
+
+
+    return *state;
+
+}
+
+
+
+
+
 void WDFsPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    juce::MemoryOutputStream stream(destData, false);
+    state->state.writeToStream(stream);
 }
 
 void WDFsPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    juce::ValueTree tree = juce::ValueTree::readFromData(data, sizeInBytes);
+
+    if (tree.isValid()) {
+
+        state->state = tree;
+
+    }
 }
 
 //==============================================================================

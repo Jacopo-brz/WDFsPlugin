@@ -13,9 +13,41 @@
 WDFsPluginAudioProcessorEditor::WDFsPluginAudioProcessorEditor (WDFsPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    //GAIN
+
+    addAndMakeVisible(gainKnob = new juce::Slider("Gain"));
+    gainKnob->setLookAndFeel(&myLookAndFeel);
+    gainKnob->setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    gainKnob->setTextBoxStyle(juce::Slider::NoTextBox, false, 100, 100);
+
+
+    //TREBLE
+
+    addAndMakeVisible(trebleKnob = new juce::Slider("Treble"));
+    trebleKnob->setLookAndFeel(&myLookAndFeel);
+    trebleKnob->setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    trebleKnob->setTextBoxStyle(juce::Slider::NoTextBox, false, 100, 100);
+
+
+    //OUT
+
+    addAndMakeVisible(outKnob = new juce::Slider("Out"));
+    outKnob->setLookAndFeel(&myLookAndFeel);
+    outKnob->setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    outKnob->setTextBoxStyle(juce::Slider::NoTextBox, false, 100, 100);
+
+
+
+    //GAIN, TREBLE, OUT ATTACHMENTS
+
+    gainAttach = new juce::AudioProcessorValueTreeState::SliderAttachment(p.getState(), "gain", *gainKnob);
+    trebleAttach = new juce::AudioProcessorValueTreeState::SliderAttachment(p.getState(), "treble", *trebleKnob);
+    outAttach = new juce::AudioProcessorValueTreeState::SliderAttachment(p.getState(), "out", *outKnob);
+
+
+
+
+    setSize(536, 414);
 }
 
 WDFsPluginAudioProcessorEditor::~WDFsPluginAudioProcessorEditor()
@@ -30,11 +62,16 @@ void WDFsPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("KLON-CENTAUR", getLocalBounds(), juce::Justification::centred, 1);
+    //ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
+    //g.drawImageAt(juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize), 0, 0);
 }
 
 void WDFsPluginAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+
+    gainKnob->setBounds(((getWidth() / 5) * 1) - 50, (getHeight() / 6) - 10, 100, 100);
+    trebleKnob->setBounds(((getWidth() / 5) * 2) + 13, (getHeight() / 6) - 10, 100, 100);
+    outKnob->setBounds(((getWidth() / 5) * 4) - 39, (getHeight() / 6) - 10, 100, 100);
+
+
 }

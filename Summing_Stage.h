@@ -13,9 +13,10 @@ using namespace Eigen;
 struct Summing_Data
 {
     Matrix<float, 4, 1> a = { 0,0,0,0};
-    Matrix<float, 4, 1> b = { 0,0,-3.5280e+09,0};
-    double M = 2.15685e+09;
-    double m = 1.3711e+09;
+    //Matrix<float, 4, 1> b = { 0,0,-3.5280e+09,0};
+    Matrix<float, 4, 1> b = { 0,0,82.5576,0};
+    //double M = 2.15685e+09;
+    //double m = 1.3711e+09;
 };
 
 typedef Matrix<float,4,4> MyMat_SS;

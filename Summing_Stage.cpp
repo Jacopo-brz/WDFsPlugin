@@ -27,7 +27,7 @@ MyMat_SS PrepareSummingStage(double sampleRate)
     B_v_T << 1, 0,
              0,-1,
              0, 1,
-             1, 0;
+             -1, 0; // 1 0
 
     Matrix<float, 2, 4> B_v = B_v_T.transpose();
 
@@ -37,7 +37,7 @@ MyMat_SS PrepareSummingStage(double sampleRate)
              0, 1,
              0, 0;
 
-    Matrix<float, 2, 4> B_i = B_i_T.transpose();
+    //Matrix<float, 2, 4> B_i = B_i_T.transpose();
 
     //diagonal matrix
     //create a diagonal matrix out of a vector
@@ -64,9 +64,9 @@ float SummingStageSample(const float inputSample, const MyMat_SS& S, Summing_Dat
 
     S_d.a[0] = inputSample;
     S_d.a[2] = S_d.b[2];
-    S_d.a[3] = 4.5; //V_gnd
+    S_d.a[3] = 4.5;
     S_d.b = S * S_d.a;
-    double outputSample = (-((S_d.a[1] + S_d.b[1]) + (S_d.a[0] + S_d.b[0])) / 2);
+    double outputSample = (((S_d.a[1] + S_d.b[1]) + (S_d.a[0] + S_d.b[0])) / 2);
     //outputSample = 2*((outputSample - S_d.m)/(S_d.M-S_d.m)) -1; //normalize btw [-1 : 1]
     return outputSample;
 }

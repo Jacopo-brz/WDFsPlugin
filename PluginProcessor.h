@@ -59,9 +59,15 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    juce::AudioProcessorValueTreeState& getState();
+
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WDFsPluginAudioProcessor)
+
+    //STATE
+    juce::ScopedPointer<juce::AudioProcessorValueTreeState> state;
 
 
     //input stage
@@ -77,17 +83,24 @@ private:
     MyMat_SS S_ss;
 
     //Tone control stage
-    TC_Data TC_data;
-    MyMat_TC S_tc;
+    //TC_Data TC_data;
+    //MyMat_TC S_tc;
 
+    TC_Data_9x9 TC_data_9x9;
+    MyMat_TC_9x9 S_tc_9x9;
     //Output stage
     Output_Data O_data;
 
-
+    //read and write on file
     juce::AudioFormatManager formatManager;
     juce::AudioBuffer<float> GetAudioBufferFromFile(juce::File file);
     juce::AudioBuffer<float> exp_sweep_buffer;
     juce::AudioBuffer<float> vst_output_buffer;
     double sample_rate = 192000;
+
+    float current_gain_value = 0.5;
+    float current_treble_value = 0.5;
+    float current_out_value = 0.5;
+
 
 };
