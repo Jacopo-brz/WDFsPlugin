@@ -26,8 +26,8 @@ using namespace Eigen;
 struct Gain_Data
 {
 private:
-    //double Ts = 1.0 / 192000;
-    double Ts = 0.520833333332e-5;
+    double Ts = 1.0 / 192000.0;
+    //double Ts = 0.520833333332e-5;
 
     //parameters of circuit
     double C3 = 0.1e-6;
@@ -47,8 +47,7 @@ private:
     double R5 = 5.1e3;
     double R8 = 1.5e3;
     double R9 = 1e3;
-    double Rb_neg = 50e3;
-    double Rb_pos = 50e3;
+
     double R15 = 22e3;
     double R17 = 27e3;
     double R18 = 12e3;
@@ -56,9 +55,7 @@ private:
     double R13 = 1e3;
     double R12 = 422e3;
     double R11 = 15e3;
-    double R10 = 2e3;
-    double Ra_neg = 50e3;
-    double Ra_pos = 50e3;
+
     double R6 = 10e3;
     double R7 = 1.5e3;
     double R19 = 15e3;
@@ -70,13 +67,13 @@ private:
 
     double ZS1 = R15 + Ts / (2 * C11);
     double ZS2 = R13 + Ts / (2 * C9);
-    double ZS3 = Ra_neg + R10;
+
     double ZP1 = (R5 * Ts / (2 * C4)) / (R5 + Ts / (2 * C4));
 
     double ZS_P2 = R9 + Ts / (2 * C6);
     double ZP2 = (R8 * ZS_P2) / (R8 + ZS_P2);
 
-    double ZP3 = (R11 * Ts / (2 * C7)) / (R11 + Ts / (2 * C7));
+    //double ZP3 = (R11 * Ts / (2 * C7)) / (R11 + Ts / (2 * C7));
     double ZP4 = (R12 * Ts / (2 * C8)) / (R12 + Ts / (2 * C8));
 
     double ZS_P5 = R18 + Ts / (2 * C12);
@@ -87,27 +84,7 @@ private:
 
     //WDF analysis
 
-//    double Z1 = Rs;
-//    double Z2 = ZP1;
-//    double Z3 = Ts / (2 * C3);
-//    double Z4 = Rb_pos;
-//    double Z5 = Rb_neg;
-//    double Z6 = ZP2;
-//    double Z7 = R_gnd;
-//    double Z8 = ZS1;
-//    double Z9 = ZP5;
-//    double Z10 = R16;
-//    double Z11 = R19;
-//    double Z12 = R7;
-//    double Z13 = Ts / (2 * C16);
-//    double Z14 = ZP6;
-//    double Z15 = Ra_pos;
-//    double Z16 = R_gnd;
-//    // Z17->series btw ZS3and ZP3
-//    double Z17 = ZS3 + ZP3;
-//    double Z18 = ZP4;
-//    double Z19 = ZS2;
-//    double Z20 = Ts / (2 * C10);
+
 //    double z21 = 964.6072;
 
     //-------- Series Scattering Matrixes ---------//
@@ -199,7 +176,62 @@ private:
 
 public:
 
-    double z21 = 964.6072;
+    //resistances associated with potentiometer values, initialized at 0.5
+    double Rb_neg = 50e3;
+    double Rb_pos = 50e3;
+    double Ra_neg = 50e3;
+    double Ra_pos = 50e3;
+    double R10 = 2e3; //this affects ZS3
+
+    double Z1 = Rs;
+    double Z2 = ZP1;
+    double Z3 = Ts / (2 * C3);
+    double Z4 = Rb_pos;
+    double Z5 = Rb_neg;
+    double Z6 = ZP2;
+    double Z7 = R_gnd;
+    double Z8 = ZS1;
+    double Z9 = ZP5;
+    double Z10 = R16;
+    double Z11 = R19;
+    double Z12 = R7;
+    double Z13 = Ts / (2 * C16);
+    double Z14 = ZP6;
+    double Z15 = Ra_pos;
+    double Z16 = R_gnd;
+    // Z17->series btw ZS3and ZP3
+
+    double ZS3 = Ra_neg + R10;
+    double ZP3 = (R11 * Ts / (2 * C7)) / (R11 + Ts / (2 * C7));
+
+    double Z17 = ZS3 + ZP3;
+    double Z18 = ZP4;
+    double Z19 = ZS2;
+    double Z20 = Ts / (2 * C10);
+
+
+
+
+    //all Z depending on potentiometers are here:
+
+
+
+
+    double Z21_99_pot[99] = {946.214449213152,	948.278467952844,	950.020876565131,	951.510494343247,	952.797781360266,	953.920577666227,	954.907815390418,	955.781993217046,	956.560869352618,
+                             957.258646552570,	957.886818536016,	958.454785535998,	958.970309252039,	959.439854047947,	959.868846247091,	960.261873576142,	960.622840274241,	960.955088950876,
+                             961.261497218071,	961.544554982181,	961.806426761646,	962.049002305334,	962.273937992151,	962.482690908748,	962.676547068518,	962.856644909744,	963.023994964643,
+                             963.179496403138,	963.323951010693,	963.458075047494,	963.582509348806,	963.697827957638,	963.804545526422,	963.903123681195,	963.993976507112,	964.077475286199,
+                             964.153952595724,	964.223705857111,	964.287000410338,	964.344072176316,	964.395129959536,	964.440357434704,	964.479914853962,	964.513940505230,	964.542551947101,
+                             964.565847041314,	964.583904800000,	964.596786061583,	964.604534006230,	964.607174519037,	964.604716406695,	964.597151471026,	964.584454440531,	964.566582758892,
+                             964.543476227096,	964.515056493569,	964.481226384182,	964.441869061344,	964.396846998436,	964.346000752491,	964.289147514249,	964.226079410333,	964.156561527195,
+                             964.080329620478,	963.997087466343,	963.906503802823,	963.808208799074,	963.701789978121,	963.586787503698,	963.462688723597,	963.328921839453,	963.184848545267,
+                             963.029755442562,	962.862843997159,	962.683218748637,	962.489873415385,	962.281674451472,	962.057341500523,	961.815424048597,	961.554273391957,	961.272008791869,
+                             960.966476366558,	960.635198841286,	960.275313699940,	959.883496496431,	959.455865004998,	958.987858387804,	958.474083444418,	957.908116989648,	957.282249032270,
+                             956.587144985085,	955.811395479902,	954.940907602004,	953.958068315644,	952.840574015055,	951.559759675728,	950.078158875256,	948.345847313554,	946.294798120955};
+    double z21 = 964.6072; //knob = 0.5
+
+    MatrixXd I = MatrixXd::Identity(21, 21);
+
     //scattering matrices depending on potentiometer value
     // S3: Ra_neg + R10
     double Z2_S3 = Ra_neg;

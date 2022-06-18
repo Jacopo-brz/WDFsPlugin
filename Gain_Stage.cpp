@@ -103,8 +103,61 @@ MyMat_G PrepareGainStage(double sampleRate)
 
 MyMat_G PrepareGainStage_Knob(float gain_pot, Gain_Data& G_d)
 {
-    Matrix<double, 21, 21> S;
-    if(gain_pot < 0.5) //a = 0.2
+    Matrix<double, 21, 9> B_v_T; //cannot be initialized in G_d since << operator gives problem and = does not work with Eigen's matrix but only with Eigen's vectors
+    B_v_T << 0, 1, 0, 0, 1, 1, 0, 0, 1,
+             0, 1, 0,-1, 1, 0, 0,-1, 0,
+             0, 0, 0, 1, 0, 1, 0, 1, 1,
+            -1, 1, 0,-1, 1, 0, 0,-1, 0,
+            -1, 1, 0, 0, 0, 0, 0, 0, 0,
+             1, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 1, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 1, 0, 0, 0, 0,-1, 0,
+             0, 0,-1,-1, 1, 0, 0, 0, 0,
+             0, 0, 1, 0, 0, 0, 0, 0, 0,
+             0, 0, 0,-1, 1, 0, 0, 0, 0,
+             0, 0, 0, 1, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 1, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 1, 0, 1, 1,
+             0, 0, 0, 0, 0, 1, 1, 0, 0,
+             0, 0, 0, 0, 0, 1, 0, 0, 0,
+             0, 0, 0, 0, 0, 0, 1, 0, 0,
+             0, 0, 0, 0, 0, 0, 0, 1, 1,
+             0, 0, 0, 0, 0, 0, 0, 1, 1,
+             0, 0, 0, 0, 0, 0, 0, 1, 0,
+             0, 0, 0, 0, 0, 0, 0, 0, 1;
+
+    Matrix<double, 9, 21> B_v = B_v_T.transpose();
+
+    Matrix<double, 21, 9> B_i_T;
+    B_i_T << 0, 1, 0, 0, 1, 1, 1,-1, 0,
+             0, 1, 0,-1, 1, 0, 0,-1, 0,
+             0, 0, 0, 1, 0, 1, 1, 0, 0,
+            -1, 1, 0,-1, 1, 0, 0,-1, 0,
+            -1, 1, 0, 0, 0, 0, 0, 0, 0,
+             1, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 1, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 1, 0, 0, 0, 0,-1, 0,
+             0, 0,-1,-1, 1, 0, 0, 0, 0,
+             0, 0, 1, 0, 0, 0, 0, 0, 0,
+             0, 0, 0,-1, 1, 0, 0, 0, 0,
+             0, 0, 0, 1, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 1, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 1, 1, 0, 0,
+             0, 0, 0, 0, 0, 1, 1, 0, 0,
+             0, 0, 0, 0, 0, 1, 0, 0, 0,
+             0, 0, 0, 0, 0, 0, 1, 0, 0,
+             0, 0, 0, 0, 0, 0, 1, 0, 0,
+             0, 0, 0, 0, 0, 0, 0, 1, 1,
+             0, 0, 0, 0, 0, 0, 0, 1, 0,
+             0, 0, 0, 0, 0, 0, 0, 0, 1;
+
+    //Matrix<float, 2, 4> B_i = B_i_T.transpose();
+
+    //diagonal matrix
+    //create a diagonal matrix out of a vector
+
+
+    /*if(gain_pot < 0.5) //a = 0.2
     {
         G_d.z21 = 961.5445;
         //S3
@@ -181,6 +234,56 @@ MyMat_G PrepareGainStage_Knob(float gain_pot, Gain_Data& G_d)
     }
 
     return S.transpose();
+*/
+
+
+
+    int index = gain_pot*100;
+    double Rpot = 100e3;
+    //update adaptor S3P3 connected to S depending on gain pot values
+    //S3
+    G_d.Z2_S3 = 100e3* gain_pot;
+    G_d.Z1_S3 = G_d.Z2_S3 + G_d.Z3_S3;
+    G_d.alpha_S3 = 2 * G_d.Z3_S3 / (G_d.Z1_S3 + G_d.Z2_S3 + G_d.Z3_S3);
+
+
+    G_d.S_S3_2 = { -1 + G_d.alpha_S3, G_d.alpha_S3, -1 + G_d.alpha_S3 };
+    G_d.S_S3_3 = { -G_d.alpha_S3, -G_d.alpha_S3, 1 - G_d.alpha_S3 };
+
+    //S3P3
+   //G_d.Z2_S3P3 = G_d.Z1_P3;
+   G_d.Z3_S3P3 = G_d.Z1_S3;
+   G_d.Z1_S3P3 = G_d.Z2_S3P3 + G_d.Z3_S3P3;
+   G_d.alpha_S3P3 = (2 * G_d.Z3_S3P3) / (G_d.Z1_S3P3 + G_d.Z2_S3P3 + G_d.Z3_S3P3);
+
+   G_d.S_S3P3_2 = { -1 + G_d.alpha_S3P3, G_d.alpha_S3P3, -1 + G_d.alpha_S3P3 };
+   G_d.S_S3P3_3 = { -G_d.alpha_S3P3, -G_d.alpha_S3P3, 1 - G_d.alpha_S3P3 };
+
+   //update single elements (resistances) connected directly to S and their Z
+
+   G_d.Ra_pos = Rpot * gain_pot;
+   G_d.Ra_neg = Rpot - G_d.Ra_pos;
+   G_d.Rb_neg = G_d.Ra_pos;
+   G_d.Rb_pos = G_d.Ra_neg;
+
+   G_d.Z15 = G_d.Ra_pos;
+   G_d.ZS3 = G_d.Ra_neg + G_d.R10;
+   G_d.Z4 = G_d.Rb_pos;
+   G_d.Z5 = G_d.Rb_neg;
+
+
+   //extract the correct z21
+   G_d.z21 = G_d.Z21_99_pot[index];
+   //compute S matrix
+
+   Matrix <double, 21, 1> vectorZ;
+   vectorZ << G_d.Z1, G_d.Z2, G_d.Z3, G_d.Z4, G_d.Z5, G_d.Z6, G_d.Z7, G_d.Z8, G_d.Z9, G_d.Z10, G_d.Z11, G_d.Z12, G_d.Z13, G_d.Z14, G_d.Z15, G_d.Z16, G_d.Z17, G_d.Z18, G_d.Z19, G_d.Z20, G_d.z21;
+   MatrixXd Z;
+   Z = vectorZ.asDiagonal();
+   MyMat_G S;
+   S << G_d.I - (2 * Z * (B_i_T * ((B_v * Z * B_i_T).inverse()) * B_v));
+
+   return S;
 
 }
 

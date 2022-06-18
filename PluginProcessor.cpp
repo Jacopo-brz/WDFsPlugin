@@ -30,7 +30,7 @@ WDFsPluginAudioProcessor::WDFsPluginAudioProcessor()
 
 
 
-    state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.0f, 1.0f, 0.5f), 0.5f, nullptr, nullptr);
+    state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("treble", "Treble", "Treble", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("out", "Out", "Out", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
 
