@@ -67,10 +67,10 @@ float OutputStageSample(const float inputSample, Output_Data& O_d)
 
 void UpdateKnob_OutputStage(Output_Data& O_d, float out_knob)
 {
-    O_d.Z5 = O_d.R_neg * (1-out_knob); //R-
+    O_d.Z5 = O_d.R_neg * (out_knob); //R-
     O_d.Z4 = (O_d.Z5 * O_d.Z6) / (O_d.Z5 + O_d.Z6);
     O_d.Z2 = O_d.Z4;
-    O_d.Z11 = O_d.R_pos * out_knob; //R+
+    O_d.Z11 = O_d.R_pos * (1-out_knob); //R+
     O_d.Z10 = O_d.Z11 + O_d.Z12;
     O_d.Z9 = O_d.Z10;
     O_d.Z7 = O_d.Z9 + O_d.Z8;

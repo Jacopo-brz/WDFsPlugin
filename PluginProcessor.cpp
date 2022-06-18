@@ -31,8 +31,8 @@ WDFsPluginAudioProcessor::WDFsPluginAudioProcessor()
 
 
     state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.0f, 1.0f, 0.5f), 0.5f, nullptr, nullptr);
-    state->createAndAddParameter("treble", "Treble", "Treble", juce::NormalisableRange<float>(0.25f, 0.75f, 0.25f), 0.5f, nullptr, nullptr);
-    state->createAndAddParameter("out", "Out", "Out", juce::NormalisableRange<float>(0.25f, 0.75f, 0.25f), 0.5f, nullptr, nullptr);
+    state->createAndAddParameter("treble", "Treble", "Treble", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
+    state->createAndAddParameter("out", "Out", "Out", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
 
 
 
@@ -148,9 +148,9 @@ void WDFsPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     S_in = PrepareInputStage(sample_rate);
     S_g = PrepareGainStage(sample_rate);
     S_ss = PrepareSummingStage(sample_rate);
-    //S_tc = PrepareToneCTLStage(sample_rate);
+    S_tc = PrepareToneCTLStage(sample_rate);
     //current_treble_value = *state->getRawParameterValue("treble");     //some bug shit happens and change the pot to 0.25
-    S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(current_treble_value);
+    //S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(current_treble_value);
     //output stage is in BCT form-> no S needed!
 
 }
@@ -209,18 +209,18 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     {
         current_gain_value = gain_knob_value;
         S_g = PrepareGainStage_Knob(gain_knob_value, G_data);
-        std::cout << "gain knob: " << gain_knob_value << std::endl;
-        std::cout << "S_g matrix: \n\n" << S_g << std::endl;
+        //std::cout << "gain knob: " << gain_knob_value << std::endl;
+        //std::cout << "S_g matrix: \n\n" << S_g << std::endl;
     }
 
     float treble_knob_value = *state->getRawParameterValue("treble");
     if(treble_knob_value!=current_treble_value)
     {
         current_treble_value = treble_knob_value;
-        //S_tc = PrepareToneCTLStage_Knob(TC_data, treble_knob_value);
-        S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(treble_knob_value);
-        std::cout << "treble knob: " << treble_knob_value << std::endl;
-        std::cout << "S_tc 9x9 \n\n"<< S_tc_9x9 << std::endl;
+        S_tc = PrepareToneCTLStage_Knob(TC_data, treble_knob_value);
+        //S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(treble_knob_value);
+        //std::cout << "treble knob: " << treble_knob_value << std::endl;
+        //std::cout << "S_tc 9x9 \n\n"<< S_tc_9x9 << std::endl;
     }
 
     float out_knob_value = *state->getRawParameterValue("out");
@@ -228,6 +228,7 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     {
         current_out_value = out_knob_value;
         UpdateKnob_OutputStage(O_data, out_knob_value);
+        //std::cout << "output knob: " << out_knob_value << std::endl;
     }
 
 
@@ -282,8 +283,8 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
            input_out = InputStageSample(input_sample, S_in, I_data);
            gain_out = GainStageSample(input_out, S_g, G_data);
            sum_out = SummingStageSample(gain_out, S_ss, S_data);
-           //tone_out = ToneCTLStageSample(sum_out, S_tc, TC_data);
-           tone_out = ToneCTLStageSample_9x9(sum_out, S_tc_9x9, TC_data_9x9);
+           tone_out = ToneCTLStageSample(sum_out, S_tc, TC_data);
+           //tone_out = ToneCTLStageSample_9x9(sum_out, S_tc_9x9, TC_data_9x9);
            channelData[sample] = OutputStageSample(tone_out, O_data);
            channelData1[sample] = channelData[sample];
        }

@@ -83,11 +83,11 @@ private:
     MyMat_SS S_ss;
 
     //Tone control stage
-    //TC_Data TC_data;
-    //MyMat_TC S_tc;
+    TC_Data TC_data;
+    MyMat_TC S_tc;
 
-    TC_Data_9x9 TC_data_9x9;
-    MyMat_TC_9x9 S_tc_9x9;
+    //TC_Data_9x9 TC_data_9x9;
+    //MyMat_TC_9x9 S_tc_9x9;
     //Output stage
     Output_Data O_data;
 

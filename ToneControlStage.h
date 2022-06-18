@@ -55,7 +55,7 @@ public:
     RowVector3f S_S2_3 = { -alpha_S2, -alpha_S2, 1 - alpha_S2};
 
     Matrix<float, 7, 1> a = { 0,0,0,0,0,0,0 };
-    Matrix<float, 7, 1> b = { 0,0,0,0,6.2007e+08,0,0 };
+    Matrix<float, 7, 1> b = { 0,0,0,0,14.5296,0,0 };
     //Matrix<float, 7, 1> b = { 0,0,0,0,-10.5262,0,0 };
     Matrix<float, 3, 1> a_S1 = { 0,0,0 };
     Matrix<float, 3, 1> b_S1 = { 0,0,0 };
