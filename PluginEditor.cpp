@@ -63,7 +63,7 @@ void WDFsPluginAudioProcessorEditor::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
     //ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
-    //g.drawImageAt(juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize), 0, 0);
+    g.drawImageAt(juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize), 0, 0);
 }
 
 void WDFsPluginAudioProcessorEditor::resized()
