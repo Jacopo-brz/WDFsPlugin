@@ -8,7 +8,7 @@ The goal of this project is to design a Virtual Analog audio plug-in based on Wa
 
 ## JUCE plugin Architecture
 
- ![alt text](https://github.com/??????) 
+ ![alt text]([https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images])
 
 
 
