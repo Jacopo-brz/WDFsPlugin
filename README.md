@@ -1,18 +1,10 @@
 # Wave Centaur: a simulation of the famous Klon Centaur guitar pedal based on Wave Digital Filters modeling
 This project is a Virtual Analog plugin version of the Klon Centaur overdrive distortion pedal, based on Wave Digital Filters (WDFs), suitable to be integrated into common digital audio workstations (DAWs). The design followed a white-box approach, discretizing the circuit elements present in the original schematics. We accomplished a real-time and efficient simulation of the pedal.
 
-
-
-## Introduction
-The aim of this project is to present a Virtual Analog modeling version of the famous Klon Centaur overdrive pedal, based on Wave Digital
-Filters. In particular, we propose an analysis structured by a stage decomposition of the overdrive, highlighting the WD tech niques utilized to model its complex topology (due to feedback and feed-forward networks) and its characteristic non-linear behaviour (due to the diodes in anti-parallel configuration). 
-We mainly focused on a real-time transient simulation with the purpose of realize a C++ plug-in version of the Centaur using the JUCE platform
-
-![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_scheme.png)
-
-
 ## JUCE plugin Architecture
-In the analysis of the Centaur we adopted the stage decomposition of the circuit operated by ElectroSmash. Each stage was then decomposed in its WDFs counterpart,and the circuit response was inspected as follows:
+In the analysis of the Centaur we adopted the stage decomposition of the circuit operated by ElectroSmash.
+![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_scheme.png)
+Each stage was then decomposed in its WDFs counterpart,and the circuit response was inspected as follows:
 - The input of a stage was expressed as a voltage, and this value gets transformed in wave domain 
 - The wave counterpart propagate in the WDFs version of the stage, until it reaches the output port, which is the node of input of the following stage in the circuit schematics
 - The voltage value gets recovered from the incident and reflected wave at the output port 
