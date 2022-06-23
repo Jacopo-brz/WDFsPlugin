@@ -1,19 +1,25 @@
 # WDFsPlugin
-The goal of this project is to design a Virtual Analog audio plug-in based on Wave Digital Filters (WDFs) suitable to be integrated into common digital audio workstations (DAWs). The audio plug-in will be implemented on the JUCE platform.
-
-
 
 ## Introduction
 
+The aim of this project is to present a Virtual Analog modeling of the
+famous Klon Centaur overdrive pedal, based on Wave Digital
+Filters. In particular, we propose an analysis structured by a
+stage decomposition of the overdrive, highlighting the WD tech-
+niques utilized to model its complex topology (due to feedback
+and feed-forward networks) and its characteristic non-linear
+behaviour (due to the diodes in anti-parallel configuration). 
+We mainly focused on a real-time transient simulation with the
+purpose of realize a C++ plug-in version of the Centaur using
+the JUCE platform
+
+![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_scheme.png)
 
 ## JUCE plugin Architecture
-![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_centaur_gui.png?raw=true)
+![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_centaur_gui.png)
 
 
-In order to verify the effectiveness of the proposed approach, we de-
-veloped an audio plugin in C++ language that wraps up the virtual
-analog simulation of the Klon Centaur pedal.
-For this purpose we used JUCE, a popular framework used by many
+In order to implement our plug-in we used JUCE, a popular framework used by many
 audio programmers for developing audio and graphic applications.
 We compiled our code as a VST3 plugin, testing it in the Reaper
 DAW with different audio tracks. The reader can immediately rec-
@@ -45,7 +51,6 @@ Jacopo Barzon
 
 
 ## References
-
 * A. Fettweis, “Wave digital filters: Theory and practice,” Pro-
 ceedings of the IEEE, vol. 74, no. 2, pp. 270–327, 1986.
 * Proverbio, A. Bernardini, and A. Sarti, “Toward the wave
@@ -70,4 +75,4 @@ vol. 63, pp. 1231–1242, 08 2016.
 *  D. Albertini, A. Bernardini, and A. Sarti, “Antiderivative an-
 tialiasing techniques in nonlinear wave digital structures,” Jour-
 nal of the Audio Engineering Society, vol. 69, pp. 448–464, 11 2021.
-
+*  https://www.electrosmash.com/klon-centaur-analysis
