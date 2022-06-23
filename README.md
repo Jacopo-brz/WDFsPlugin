@@ -29,12 +29,12 @@ the output volume desired setting the value of the trhree potentiometers.
 
 * Clone ro download the repository
 * Create a new basic-plugin in Projucer
-* Copy the .cpp and .h files in the source and build the project with your favourite IDE
+* Copy the .cpp and .h files in the Source and build the project with your favourite IDE
 
 
 ### Executing program
 
-Once you obtain the VST/VST3 file (following the previous steps) you have simply to open it with a DAW assigning it to a MIDI or audio channel.
+Once you obtain the VST/VST3 file (follow the previous steps) you have simply to open it in a DAW assigning it to a MIDI or audio channel.
 
 
 ## Authors
