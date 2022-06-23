@@ -7,7 +7,7 @@ The goal of this project is to design a Virtual Analog audio plug-in based on Wa
 
 
 ## JUCE plugin Architecture
-![](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_centaur_gui.png)
+![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_centaur_gui.png?raw=true)
 
 
 In order to verify the effectiveness of the proposed approach, we de-
