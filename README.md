@@ -60,6 +60,5 @@ IEEE Transactions on Circuits and Systems I: Regular Papers,
 vol. 63, pp. 1231–1242, 08 2016.
 *  D. Albertini, A. Bernardini, and A. Sarti, “Antiderivative an-
 tialiasing techniques in nonlinear wave digital structures,” Jour-
-nal of the Audio Engineering Society, vol. 69, pp. 448–464, 11
-2021.
+nal of the Audio Engineering Society, vol. 69, pp. 448–464, 11 2021.
 
