@@ -8,23 +8,33 @@ The goal of this project is to design a Virtual Analog audio plug-in based on Wa
 
 ## JUCE plugin Architecture
 
- ![alt text]([https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_centaur_gui.png])
+ ![alt text](https://github.com/Jacopo-brz/WDFsPlugin/tree/master/Images/klon_centaur_gui.png)
 
 
-
+In order to verify the effectiveness of the proposed approach, we de-
+veloped an audio plugin in C++ language that wraps up the virtual
+analog simulation of the Klon Centaur pedal.
+For this purpose we used JUCE, a popular framework used by many
+audio programmers for developing audio and graphic applications.
+We compiled our code as a VST3 plugin, testing it in the Reaper
+DAW with different audio tracks. The reader can immediately rec-
+ognize in the figure the original Centaur design we decided to adopt
+for our model’s gui.
+The user can easily control the amount of distortion, the quantity of boost of the mid-gigh frequency and 
+the output volume desired setting the value of the trhree potentiometers.
 ## How to use 
 
 
 ### Installing
 
-* Clone the repository. 
-* 
+* Clone ro download the repository
+* Create a new basic-plugin in Projucer
+* Copy the .cpp and .h files in the source and build the project with your favourite IDE
 
 
 ### Executing program
 
-*
-* 
+Once you obtain the VST/VST3 file (following the previous steps) you have simply to open it with a DAW assigning it to a MIDI or audio channel.
 
 
 ## Authors
