@@ -33,7 +33,7 @@ Once you obtain the VST/VST3 file (follow the previous steps) you have simply to
 
 ## Authors
 
-Jacopo Barzon, Francesco Boarino
+Jacopo Barzon and Francesco Boarino
 
 ## References
 
