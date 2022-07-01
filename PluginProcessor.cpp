@@ -30,6 +30,7 @@ WDFsPluginAudioProcessor::WDFsPluginAudioProcessor()
 
 
 
+    //state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("treble", "Treble", "Treble", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("out", "Out", "Out", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
@@ -231,7 +232,8 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         //std::cout << "output knob: " << out_knob_value << std::endl;
     }
 
-
+    //std::cout << "Potentiometer values: \n" << "Ra_pos: " << G_data.Ra_pos << "\n Ra_neg: " << G_data.Ra_neg <<
+    //             "\n Rb_pos: " << G_data.Rb_pos << "\n Rb_neg: " << G_data.Rb_neg << std::endl;
     //FORCED MONO INPUT (Guitar pedal :D)
     juce::ignoreUnused(midiMessages);
     juce::ScopedNoDenormals noDenormals;

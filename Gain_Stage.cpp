@@ -238,11 +238,18 @@ MyMat_G PrepareGainStage_Knob(float gain_pot, Gain_Data& G_d)
 
 
 
-    int index = gain_pot*100;
+    int index = int(gain_pot*100); //find the correct z21 pre-computed parameter for S computation
     double Rpot = 100e3;
+
+    //G_d.Ra_neg = Rpot * gain_pot; //dummy
+    G_d.Ra_pos = Rpot*(std::pow(2,gain_pot) - 0.999); //exp,
+    G_d.Ra_neg = Rpot - G_d.Ra_pos;
+    G_d.Rb_neg = G_d.Ra_pos;
+    G_d.Rb_pos = G_d.Ra_neg;
+
     //update adaptor S3P3 connected to S depending on gain pot values
     //S3
-    G_d.Z2_S3 = 100e3* gain_pot;
+    G_d.Z2_S3 = G_d.Ra_neg;
     G_d.Z1_S3 = G_d.Z2_S3 + G_d.Z3_S3;
     G_d.alpha_S3 = 2 * G_d.Z3_S3 / (G_d.Z1_S3 + G_d.Z2_S3 + G_d.Z3_S3);
 
@@ -261,11 +268,6 @@ MyMat_G PrepareGainStage_Knob(float gain_pot, Gain_Data& G_d)
 
    //update single elements (resistances) connected directly to S and their Z
 
-   G_d.Ra_pos = Rpot * gain_pot;
-   G_d.Ra_neg = Rpot - G_d.Ra_pos;
-   G_d.Rb_neg = G_d.Ra_pos;
-   G_d.Rb_pos = G_d.Ra_neg;
-
    G_d.Z15 = G_d.Ra_pos;
    G_d.ZS3 = G_d.Ra_neg + G_d.R10;
    G_d.Z4 = G_d.Rb_pos;
@@ -273,7 +275,7 @@ MyMat_G PrepareGainStage_Knob(float gain_pot, Gain_Data& G_d)
 
 
    //extract the correct z21
-   G_d.z21 = G_d.Z21_99_pot[index];
+   G_d.z21 = G_d.Z21_99_pot_log[index];
    //compute S matrix
 
    Matrix <double, 21, 1> vectorZ;
