@@ -12,7 +12,7 @@
 myLookAndFeelV1::myLookAndFeelV1()
 {
 
-    img1 = juce::ImageCache::getFromMemory(BinaryData::knob1_png, BinaryData::knob1_pngSize);
+    img1 = juce::ImageCache::getFromMemory(BinaryData::knob_png, BinaryData::knob_pngSize);
 
 }
 
