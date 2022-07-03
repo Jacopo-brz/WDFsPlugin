@@ -16,6 +16,7 @@ We followed the very same idea regarding the plugin architecture: each stage has
 ## How to use the plugin
 <img src="Images/klon_centaur_gui.png"/> 
 
+
 The reader can immediately recognize in the figure the original Centaur design we decided to adopt for our model’s gui.
 The user can easily regulate the amount of distortion, the treble control and the output volume desired setting the value of the three potentiometers, as possible with the original pedal.
 
