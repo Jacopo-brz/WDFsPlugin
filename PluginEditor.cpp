@@ -47,7 +47,7 @@ WDFsPluginAudioProcessorEditor::WDFsPluginAudioProcessorEditor (WDFsPluginAudioP
 
 
 
-    setSize(536, 414);
+    setSize(485, 381);
 }
 
 WDFsPluginAudioProcessorEditor::~WDFsPluginAudioProcessorEditor()
@@ -62,16 +62,16 @@ void WDFsPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    //ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
+    juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     g.drawImageAt(juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize), 0, 0);
 }
 
 void WDFsPluginAudioProcessorEditor::resized()
 {
 
-    gainKnob->setBounds(((getWidth() / 5) * 1) - 50, (getHeight() / 6) - 10, 100, 100);
-    trebleKnob->setBounds(((getWidth() / 5) * 2) + 13, (getHeight() / 6) - 10, 100, 100);
-    outKnob->setBounds(((getWidth() / 5) * 4) - 39, (getHeight() / 6) - 10, 100, 100);
+    gainKnob->setBounds(((getWidth() / 5) * 1) - 30, (getHeight() / 6) - 18, 70, 70);
+    trebleKnob->setBounds(((getWidth() / 5) * 2) + 27, (getHeight() / 6) - 18, 70, 70);
+    outKnob->setBounds(((getWidth() / 5) * 4) - 20, (getHeight() / 6) - 18, 70, 70);
 
 
 }
