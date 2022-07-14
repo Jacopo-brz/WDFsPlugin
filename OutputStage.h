@@ -73,7 +73,6 @@ struct Output_Data
 
     Matrix<double, 12, 1> a {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    //Matrix<double, 12, 1> b {0, 0, 0, 0, 0, 0, 0, -3.5280e+09, 0, 0, 0, 0};
     Matrix<double, 12, 1> b {0, 0, 0, 0, 0, 0, 0,  -126.2125, 0, 0, 0, 0};
     Matrix<double, 3, 1> adapt_par1;
     Matrix<double, 3, 1> adapt_ser1;

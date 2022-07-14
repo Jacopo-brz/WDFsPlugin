@@ -32,7 +32,7 @@ MyMat_IN PrepareInputStage(double sampleRate)
 
         MyMat_IN S;
         S << (I-2*Z*Bt*((B*Z*Bt).inverse())*B);
-        std::cout << "S input: \n" << S << std::endl;
+        //std::cout << "S input: \n" << S << std::endl;
         return S;
 
 }

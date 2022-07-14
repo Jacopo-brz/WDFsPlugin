@@ -55,7 +55,7 @@ MyMat_SS PrepareSummingStage(double sampleRate)
     MyMat_SS S;
     S << I - (2 * Z * (B_i_T * ((B_v * Z * B_i_T).inverse()) * B_v));
 
-    std::cout << "S matrix: \n\n" << S << std::endl;
+    //std::cout << "S matrix: \n\n" << S << std::endl;
     return S;
 }
 
@@ -67,6 +67,5 @@ float SummingStageSample(const float inputSample, const MyMat_SS& S, Summing_Dat
     S_d.a[3] = 4.5;
     S_d.b = S * S_d.a;
     double outputSample = (((S_d.a[1] + S_d.b[1]) + (S_d.a[0] + S_d.b[0])) / 2);
-    //outputSample = 2*((outputSample - S_d.m)/(S_d.M-S_d.m)) -1; //normalize btw [-1 : 1]
     return outputSample;
 }

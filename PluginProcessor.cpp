@@ -28,9 +28,6 @@ WDFsPluginAudioProcessor::WDFsPluginAudioProcessor()
     state = new juce::AudioProcessorValueTreeState(*this, nullptr);
 
 
-
-
-    //state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("gain", "Gain", "Gain", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("treble", "Treble", "Treble", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
     state->createAndAddParameter("out", "Out", "Out", juce::NormalisableRange<float>(0.01f, 0.99f, 0.01f), 0.5f, nullptr, nullptr);
@@ -117,42 +114,13 @@ void WDFsPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 {    
 
     juce::ignoreUnused (sampleRate, samplesPerBlock);
-    //formatManager.registerBasicFormats();
-    //testing if juce correctly read and write a .wav file
-//-- 1 read from file - juce method
-    //juce::File ExpSweepFile("/home/jacopo/Scaricati/ExpSweep.wav");
-    //if (! ExpSweepFile.existsAsFile())
-    //{
-    //    DBG ("File doesn't exist ...");
-    //}
-    //exp_sweep_buffer = GetAudioBufferFromFile(ExpSweepFile); //juce native method
 
-/*-- 2 salvare il risultato della computazione in un file wav
-    AudioFile<double> audioFileOutput;
-    audioFileOutput.setSampleRate(sample_rate);
-    audioFileOutput.setBitDepth(16);
-    audioFileOutput.setAudioBufferSize(1, numSamples);
-
-    for (int i = 0; i < numSamples ; i++)
-    {
-        //float sample = expPointer[i];
-        float sample = read_exp_buffer[i];
-        audioFileOutput.samples[0][i] = sample;
-    }
-
-    const std::string projectBuildDirectory = "/home/jacopo/Documenti/Università/ProjectCourse/Matlab_Gain/";
-    audioFileOutput.save(projectBuildDirectory + "expSweep_pluginX.wav", AudioFileFormat::Wave);
-    bool loadedOK = audioFileOutput.load(projectBuildDirectory + "expSweep_pluginX.wav");
-    std::cout << "expSweep_pluginX.wav correctly loaded: " << loadedOK << std::endl;
-*/
     //Compute S for each stage
     S_in = PrepareInputStage(sample_rate);
     S_g = PrepareGainStage(sample_rate);
     S_ss = PrepareSummingStage(sample_rate);
     S_tc = PrepareToneCTLStage(sample_rate);
-    //current_treble_value = *state->getRawParameterValue("treble");     //some bug shit happens and change the pot to 0.25
-    //S_tc_9x9 = PrepareToneCTLStage_Knob_9x9(current_treble_value);
-    //output stage is in BCT form-> no S needed!
+
 
 }
 
@@ -234,7 +202,7 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
     //std::cout << "Potentiometer values: \n" << "Ra_pos: " << G_data.Ra_pos << "\n Ra_neg: " << G_data.Ra_neg <<
     //             "\n Rb_pos: " << G_data.Rb_pos << "\n Rb_neg: " << G_data.Rb_neg << std::endl;
-    //FORCED MONO INPUT (Guitar pedal :D)
+    //FORCED MONO INPUT (Guitar pedal)
     juce::ignoreUnused(midiMessages);
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = 1; //getTotalNumInputChannels();
@@ -247,37 +215,14 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
      auto* channelData = buffer.getWritePointer (channel);
      auto* channelData1 = buffer.getWritePointer (channel+1);
 
-     //const float* read_exp_buffer = exp_sweep_buffer.getReadPointer(0);
-     //int numSamples = exp_sweep_buffer.getNumSamples();
-     //std::cout << "num samples: " << numSamples << std::endl;
-
-     //vst_output_buffer.setSize(1,numSamples);
-     //float* write_on_output = vst_output_buffer.getWritePointer(0);
-
-     //const float* read_vst_out = vst_output_buffer.getReadPointer(0);
- //la funzione vera e propria, che leggerà i samples in input dal buffer exp_sweep
- //e scriverà i samples di output nel buffer vst_output
- //  GainStage(read_exp_buffer, write_on_gain, numSamples, S_g, G_mats);
-        //GainStage(buffer.getReadPointer(0), channelData, buffer.getNumSamples(), S_g, G_mats);
 
      float input_out = 0;
      float gain_out = 0;
      float sum_out = 0;
      float tone_out = 0;
 
-     /*for(int sample = 0; sample<exp_sweep_buffer.getNumSamples(); ++sample)
-     {
-         const float input_sample = read_exp_buffer[sample];
-         input_out = InputStageSample(input_sample, S_in, I_data);
-         gain_out = GainStageSample(input_out, S_g, G_data);
-         sum_out = SummingStageSample(gain_out, S_ss, S_data);
-         tone_out = ToneCTLStageSample(sum_out, S_tc, TC_data);
-         write_on_output[sample] = OutputStageSample(tone_out, O_data);
 
-     }*/
-
-
-       //VST version:
+       //sample by sample computation
        auto inputBuffer = buffer.getReadPointer(channel);//MONO input
        for(int sample = 0; sample<buffer.getNumSamples(); ++sample)
        {
@@ -290,24 +235,6 @@ void WDFsPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
            channelData[sample] = OutputStageSample(tone_out, O_data);
            channelData1[sample] = channelData[sample];
        }
-    /*
- // salvare il risultato della computazione in un file wav
-       AudioFile<double> vstOutFile;
-       vstOutFile.setSampleRate(sample_rate);
-       vstOutFile.setBitDepth(16);
-       vstOutFile.setAudioBufferSize(1, numSamples);
-
-       for (int i = 0; i < numSamples ; i++)
-       {
-           float sample = read_vst_out[i];
-           vstOutFile.samples[0][i] = sample;
-       }
-
-       const std::string projectBuildDirectory = "/home/jacopo/Documenti/Università/ProjectCourse/MATLAB GENERALE/INPUTeGAINeSUMMINGeTONE_CONTROLeOUTPUT/";
-       vstOutFile.save(projectBuildDirectory + "VSTOutput_pluginProcessor_SxS2.wav", AudioFileFormat::Wave);
-       bool isloaded = vstOutFile.load(projectBuildDirectory + "VSTOutput_pluginProcessor_SxS2.wav");
-       std::cout << "VSTOutput_pluginProcessor_SxS2.wav correctly loaded: " << isloaded << std::endl;
-    */
 }
 
 //==============================================================================
