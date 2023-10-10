@@ -23,9 +23,11 @@ The user can easily regulate the amount of distortion, the treble control and th
 ### Installing
 
 * Clone/download the repository
-* Create a new basic-plugin in Projucer or via CMake
-* Copy the .cpp and .h files in the Source and build the project with your favourite IDE
-
+* Initialize a new basic plugin in Projucer or via CMake. Remember to include the JUCE-DSP module
+* If you are using Projucer, before creating the project with the targeted IDE copy the .cpp and .h files contained in the repository in Projucer's Source folder (drag and drop). This operation will replace the dummy PluginEditor.cpp/.h and PluginProcessor.cpp/.h files created automatically by Projucer
+* Include Eigen (https://gitlab.com/libeigen/eigen) as a dependency of the project
+* Build the project with your favourite IDE in Release configuration
+  
 
 ### Executing program
 
